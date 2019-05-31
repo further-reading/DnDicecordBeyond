@@ -27,11 +27,27 @@ class DnDBeyond:
 
         name = driver.find_element_by_css_selector('.ct-character-tidbits__name')
         output['name'] = name.text
+
         stats = driver.find_elements_by_css_selector('.ct-ability-summary')
         output['stats'] = self.get_stats(stats)
+
         attacks = driver.find_elements_by_css_selector('.ct-combat-attack')
         output['attacks'] = self.get_attacks(attacks)
+
+        skills = driver.find_elements_by_css_selector('.ct-skills__item')
+        output['skills'] = self.get_skills(skills)
         driver.close()
+        return output
+
+
+    def get_skills(self, skills):
+        output = {}
+        for skill in skills:
+            skillName = skill.find_element_by_css_selector(".ct-skills__col--skill").text
+            modValue = self.get_modifier(skill)
+            output[skillName] = modValue
+
+        return output
 
     def get_attacks(self, attacks):
         output = {}
